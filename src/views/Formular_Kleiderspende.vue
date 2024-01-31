@@ -5,6 +5,7 @@
         <h2><span style="color:white;"><br>Registrieren Sie hier Ihre Kleiderspende</span></h2>
         <div class="alert alert-light" role="alert">
           <form @submit.prevent="submitForm">
+            <!--Step 1 - choose deliveryOption -->
             <div v-if="currentStep === 1">
               <div class="alert alert-info" role="alert">
                 Bitte beachten: Eine Abholung über das Sammelfahrzeug ist nur in der Nähe der Geschäftsstelle möglich (Postleitzahlen startend mit 12).
@@ -25,6 +26,7 @@
                 </div><br>
               <button @click="nextStep" class="btn btn-primary">Weiter</button>
             </div>
+            <!--Step 2 - enter data -->
             <div v-if="currentStep === 2">
                 <div class="progress">
                   <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
@@ -40,6 +42,7 @@
                       <input type="text" class="form-control" id="lastname" v-model="formData.lastname" minlength="2" maxlength="30" pattern="[a-zA-ZäöüßÄÖÜ]+" required>
                     <br></div>
                   </div>
+                  <!--Step 2 - Only for deliveryOption = Abholung-->
                   <div class="row g-3" v-if="formData.deliveryOption === 'Abholung'">
                   <label>Wo können wir Ihre Klamottenspende abholen?</label>
                     <div class="col-md-6">
@@ -60,37 +63,37 @@
                       <p v-if="formData.zipcode.substring(0,2)!=='12'" class="text-danger">Keine Abholung in diesem Gebiet (nur PLZ startend mit 12)</p>
                     </div><br>
                   </div><br>
-                    <!--checkboxen-->
+                  <!--End of Step 2 - Only for deliveryOption = Abholung-->
                     <label>Welche Art von Kleidung möchten Sie spenden? (Mehrfachauswahl möglich)</label>
                     <div class="row justify-content-center">
                       <div class="col col-lg-2">
                         <input class="form-check-input" type="checkbox" value="T-Shirt" name="clothingType[]" v-model="formData.clothingType">
                           <label class="form-check-label" for="clothingType[]">
-                          T-Shirt
+                            T-Shirt
                           </label>
                         </div>
                         <div class="col col-lg-2">
                           <input class="form-check-input" type="checkbox" value=Kleid name="clothingType[]" v-model="formData.clothingType">
                           <label class="form-check-label" for="clothingType[]">
-                          Kleid
+                            Kleid
                           </label>
                         </div>
                         <div class="col col-lg-2">
                           <input class="form-check-input" type="checkbox" value=Hose name="clothingType[]" v-model="formData.clothingType">
                           <label class="form-check-label" for="clothingType[]">
-                          Hose
+                            Hose
                           </label>
                         </div>
                         <div class="col col-lg-2">
                           <input class="form-check-input" type="checkbox" value=Jacke name="clothingType[]" v-model="formData.clothingType">
                           <label class="form-check-label" for="clothingType[]">
-                          Jacke
+                            Jacke
                           </label>
                         </div>  
                         <div class="col col-lg-2">
                           <input class="form-check-input" type="checkbox" value=Sonstiges name="clothingType[]" v-model="formData.clothingType">
                           <label class="form-check-label" for="clothingType[]">
-                          Sonstiges
+                            Sonstiges
                           </label>
                         </div><br>
                         <p v-if="formData.clothingType.length===0" class="text-danger">Bitte wählen Sie die Art der Kleider aus, die Sie spenden möchten</p>
@@ -114,52 +117,47 @@
                 <button @click="prevStep" class="btn btn-secondary">Zurück</button>
                 <button @click="nextStep" class="btn btn-primary">Weiter</button>
             </div>
-
+            <!--Step 3 - check data -->
              <div v-if="currentStep === 3">
               <div class="progress">
                 <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
               </div><br>
               <h2>Schritt 3: Bitte überprüfen Sie Ihre Daten</h2>
                 <ul>
-                  <li><strong>Übergabe:</strong> {{ formData.deliveryOption }}</li>
-                  <li v-if="formData.deliveryOption === 'Abholung'">
-                    <strong>Vorname:</strong> {{ formData.firstname }}<br>
-                    <strong>Nachname:</strong> {{ formData.lastname }}<br>
+                  <strong>Übergabe:</strong> {{ formData.deliveryOption }}<br>
+                  <strong>Vorname:</strong> {{ formData.firstname }}<br>
+                  <strong>Nachname:</strong> {{ formData.lastname }}<br>
+                  <ul v-if="formData.deliveryOption === 'Abholung'">
                     <strong>Abgabeort:</strong> {{ formData.street }} {{ formData.housenumber}}, {{ formData.zipcode }} {{ formData.place }}<br>
+                  </ul>
+                  <ul v-else>                   
+                    <strong>Abgabeort:</strong> Musterstraße 1, 12345 Musterstadt<br>
+                  </ul>
                     <strong>Angebene Kleidungsart(-en):</strong> {{ formData.clothingType.toString() }}<br>
                     <strong>Krisengebiet:</strong> {{ formData.donationArea }}<br>                    
-                  </li>
-                  <li v-else>
-                    <strong>Vorname:</strong> {{ formData.firstname }}<br>
-                    <strong>Nachname:</strong> {{ formData.lastname }}<br>
-                    <strong>Abgabeort:</strong> Musterstraße 1, 12345 Musterstadt<br>
-                    <strong>Angebene Kleidungsart(-en):</strong> {{ formData.clothingType.toString() }}<br>
-                    <strong>Krisengebiet:</strong> {{ formData.donationArea }}<br>
-                  </li>
                 </ul>
               <button @click="prevStep" class="btn btn-secondary">Zurück</button>
               <button @click="submitForm" type="submit" class="btn btn-success">Abschicken</button>
             </div>
+            <!--Step 4 - submit data -->
             <div v-if="currentStep === 4">
               <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                </div>
               </div><br>
               <h2> Liebe(r) {{formData.firstname}} {{formData.lastname}}, Ihre Kleiderspende wurde registriert, vielen Dank! </h2><br>
                 <ul>
                   <strong>Übergabe:</strong> {{ formData.deliveryOption }}<br>
                   <ul v-if="formData.deliveryOption === 'Abholung'">
                     <strong>Abgabeort:</strong> {{ formData.street }} {{ formData.housenumber}}, {{ formData.zipcode }} {{ formData.place }}<br>
-                    <strong>Angebene Kleidungsart(-en):</strong> {{ formData.clothingType.toString() }}<br>
-                    <strong>Krisengebiet:</strong> {{ formData.donationArea }}<br>                                       
-                    <strong>Zeitpunkt der Registrierung:</strong> {{formData.registrationDate.toLocaleString()}}<br>
                   </ul>
-                  <ul v-else>
+                  <ul v-else>                   
                     <strong>Abgabeort:</strong> Musterstraße 1, 12345 Musterstadt<br>
+                  </ul>
                     <strong>Angebene Kleidungsart(-en):</strong> {{ formData.clothingType.toString() }}<br>
                     <strong>Krisengebiet:</strong> {{ formData.donationArea }}<br>
                     <strong>Zeitpunkt der Registrierung:</strong> {{formData.registrationDate.toLocaleString()}}<br>
-                  </ul>
-                </ul>
+                </ul> 
             </div>
           </form>
         </div>
@@ -172,7 +170,7 @@
 export default {
     data(){
       return {
-        currentStep: 1,
+          currentStep: 1,
           formData: {
             deliveryOption: '',          
             firstname: '',
@@ -199,34 +197,29 @@ export default {
 
     validateForm() {
       if (this.currentStep === 1) {
-        // Basic validation
         return !!this.formData.deliveryOption;
-      } else if (this.currentStep === 2 && this.formData.deliveryOption=== "Abholung") {
-        // Additional validation for the delivery option based on zipcode
+      } 
+      else if (this.currentStep === 2 && this.formData.deliveryOption=== "Abholung") {
           if (this.formData.zipcode.substring(0,2)==='12' && this.formData.zipcode.length===5 && this.formData.clothingType.length !== 0) {
             return this.formData.firstname && this.formData.lastname && this.formData.street && this.formData.housenumber && this.formData.place && this.formData.clothingType && this.formData.donationArea && this.formData.check;
             }
-            else  {
-                  return false;
-                }
-        } else if (this.currentStep === 2 && this.formData.deliveryOption=== "Übergabe an der Geschäftsstelle"){
-                 if (this.formData.clothingType.length === 0){ 
-                    return false;} 
-                 else { 
-                  return this.formData.firstname && this.formData.lastname &&this.formData.donationArea && this.formData.check;
-                  }
+          else  {
+            return false;
+            }
+        } 
+      else if (this.currentStep === 2 && this.formData.deliveryOption=== "Übergabe an der Geschäftsstelle"){
+            if (this.formData.clothingType.length === 0){ 
+              return false;} 
+            else { 
+              return this.formData.firstname && this.formData.lastname &&this.formData.donationArea && this.formData.check;
               }
-          else if (this.currentStep === 3){
-            return true;
-          }
+            }
         },
 
     submitForm() {
-      if (this.validateForm()) {
         this.currentStep++;
         // Handle form submission logic, e.g., send data to server
         console.log('Form submitted:', this.formData);
-      }
     },
   },
 };

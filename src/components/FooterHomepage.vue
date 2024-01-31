@@ -14,7 +14,6 @@
       <div class="row justify-content-center">
         <div class="col col-md-6 mb-4 mb-md-0">
           <h5 class="text-uppercase mb-4">Öffnungszeiten Geschäftsstelle</h5>
-
           <table class="table text-center text-white">
             <tbody class="fw-normal">
               <tr>
@@ -58,6 +57,4 @@ export default {
 </script>
 
 <style scoped>
-#footerHompage{
-}
 </style>
